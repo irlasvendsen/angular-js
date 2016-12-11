@@ -9,11 +9,13 @@
          content must come *after* these tags -->
     <title>Ristorante Con Fusion: Menu</title>
         <!-- Bootstrap -->
+<!-- build:css styles/main.css -->
     <link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
     <link href="../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="styles/bootstrap-social.css" rel="stylesheet">
     <link href="styles/mystyles.css" rel="stylesheet">
+<!-- endbuild -->
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -26,30 +28,30 @@
 <body>
 
     <div class="container">
-        <div class="row row-content" ng-controller="dishDetailController as dishCrtl">
+        <div class="row row-content" ng-controller="DishDetailController">
             <div class="col-xs-12">
               <!-- Week 1 Assignment Task1 -->
               <div class="media">
                 <div class="media-left media-middle">
                 <a href="#">
                 <img class="media-object img-thumbnail"
-                 ng-src={{dishCrtl.dish.image}} alt="Uthappizza">
+                 ng-src={{dish.image}} alt="Uthappizza">
                 </a>
               </div>
                 <div class="media-body">
-                  <h2 class="media-heading">{{dishCrtl.dish.name}}
-                   <span class="label label-danger">{{dishCrtl.dish.label}}</span>
-                   <span class="badge">{{dishCrtl.dish.price | currency}}</span></h2>
-                  <p>{{dishCrtl.dish.description}}</p>
+                  <h2 class="media-heading">{{dish.name}}
+                   <span class="label label-danger">{{dish.label}}</span>
+                   <span class="badge">{{dish.price | currency}}</span></h2>
+                  <p>{{dish.description}}</p>
               </div>
             </div>
           </div>
             <div class="col-xs-9 col-xs-offset-1">
               <ul class="media-list" >
                 <!-- Week 1 Assignment Task3 -->
-                <p><label> Customer Comments </label> <span style="color:#777">Sort by: <input type="text" value="" ng-model="dishCrtl.filterOrder" /></span></p>
+                <p><label> Customer Comments </label> <span style="color:#777">Sort by: <input type="text" value="" ng-model="filterOrder" /></span></p>
                 <!-- Week 1 Assignment Task2 -->
-              <li class="media" ng-repeat="com in dishCrtl.dish.comments | orderBy:dishCrtl.filterOrder">
+              <li class="media" ng-repeat="com in dish.comments | orderBy:filterOrder">
               <blockquote>
                 <p>{{com.rating}} Stars</p>
                 <p>{{com.comment}}</p>
@@ -58,63 +60,83 @@
             </li>
             </ul>
             </div>
+            <div class="col-xs-9 col-xs-offset-1" ng-controller="DishCommentController">
+                    <ul class="list-unstyled">
+                      <!-- Week 2 Assignment Task3 -->
+                      <li class="media">
+                        <blockquote ng-show="comments.author && comments.comment && !commentForm$pristine">
+                          <p>{{comments.rating}} Stars</p>
+                          <p>{{comments.comment}}</p>
+                          <footer>{{comments.author}}, </footer>
+                        </blockquote>
+                      </li>
+
+                    </ul>
+
+                <form class="form-horizontal" name="commentForm" ng-submit="submitComment()" novalidate>
+                  <!-- Week 2 Assignment Task1 -->
+                  <!-- Week 2 Assignment Task2 -->
+                  <div class="form-group" ng-class="{ 'has-error' : commentForm.author.$error.required && !commentForm.author.$pristine }">
+                      <label for="author" class="col-sm-2 control-label">Your Name</label>
+                      <div class="col-sm-10">
+                      <input type="text" class="form-control" id="author" name="author" placeholder="Enter Your Name" ng-model="comments.author" required>
+                      <!-- Week 2 Assignment Task2 -->
+                      <span ng-show="commentForm.author.$error.required && !commentForm.author.$pristine" class="help-block">Your name is required.</span>
+                      </div>
+                  </div>
+                    <!-- Week 2 Assignment Task1 -->
+                  <div class="form-group">
+                    <label for="numberstars" class="col-sm-2 control-label">Number of Stars</label>
+                    <div class="col-sm-10">
+                      <div class="radio form-class" >
+                        <label class="radio-inline">
+                          <input type="radio" name="rating" ng-model="comments.rating" id="optionsRadios" value="1">
+                          1
+                        </label>
+                        <label class="radio-inline">
+                          <input type="radio" name="rating" ng-model="comments.rating"  id="rating" value="2">
+                          2
+                        </label>
+                        <label class="radio-inline">
+                          <input type="radio" name="rating" ng-model="comments.rating" id="rating" value="3">
+                          3
+                        </label>
+                        <label class="radio-inline">
+                          <input type="radio" name="rating" ng-model="comments.rating" id="rating" value="4">
+                          4
+                        </label>
+                        <label class="radio-inline">
+                          <input type="radio" name="rating" ng-model="comments.rating" id="rating" value="5" checked>
+                          5
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                    <!-- Week 2 Assignment Task1 -->
+                    <!-- Week 2 Assignment Task2 -->
+                  <div class="form-group" ng-class="{ 'has-error' : commentForm.comment.$error.required && !commentForm.comment.$pristine }">
+                      <label for="comment" class="col-sm-2 control-label">Your Comments</label>
+                      <div class="col-sm-10">
+                          <textarea class="form-control" rows="12" ng-model="comments.comment" id="comment" name="comment" required>
+                          </textarea>
+                          <!-- Week 2 Assignment Task2 -->
+                          <span ng-show="commentForm.comment.$error.required && !commentForm.comment.$pristine" class="help-block">Your comment is required.</span>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class="col-sm-offset-2 col-sm-10">
+                          <button type="submit" class="btn btn-primary" ng-disabled="commentForm.$invalid">Submit Comment</button>
+                      </div>
+                  </div>
+                </form>
+            </div>
         </div>
     </div>
 
+<!-- build:js scripts/main.js -->
     <script src="../bower_components/angular/angular.min.js"></script>
-    <script>
-
-        var app = angular.module('confusionApp',[]);
-
-        app.controller('dishDetailController', function() {
-            var filterOrder = "";
-            var dish={
-                          name:'Uthapizza',
-                          image: 'images/uthapizza.png',
-                          category: 'mains',
-                          label:'Hot',
-                          price:'4.99',
-                          description:'A unique combination of Indian Uthappam (pancake) and Italian pizza, topped with Cerignola olives, ripe vine cherry tomatoes, Vidalia onion, Guntur chillies and Buffalo Paneer.',
-                           comments: [
-                               {
-                                   rating:5,
-                                   comment:"Imagine all the eatables, living in conFusion!",
-                                   author:"John Lemon",
-                                   date:"2012-10-16T17:57:28.556094Z"
-                               },
-                               {
-                                   rating:4,
-                                   comment:"Sends anyone to heaven, I wish I could get my mother-in-law to eat it!",
-                                   author:"Paul McVites",
-                                   date:"2014-09-05T17:57:28.556094Z"
-                               },
-                               {
-                                   rating:3,
-                                   comment:"Eat it, just eat it!",
-                                   author:"Michael Jaikishan",
-                                   date:"2015-02-13T17:57:28.556094Z"
-                               },
-                               {
-                                   rating:4,
-                                   comment:"Ultimate, Reaching for the stars!",
-                                   author:"Ringo Starry",
-                                   date:"2013-12-02T17:57:28.556094Z"
-                               },
-                               {
-                                   rating:2,
-                                   comment:"It's your birthday, we're gonna party!",
-                                   author:"25 Cent",
-                                   date:"2011-12-02T17:57:28.556094Z"
-                               }
-
-                           ]
-                    };
-
-            this.dish = dish;
-
-        });
-
-    </script>
+    <script src="scripts/app.js"></script>
+<!-- endbuild -->
 
 </body>
 
